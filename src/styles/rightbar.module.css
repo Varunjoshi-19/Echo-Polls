@@ -1,0 +1,82 @@
+.container {
+  position: absolute;
+  top: 0;
+  right: -560px;
+  width: 580px;
+  height: 100vh;
+  background: #3f3f3f;
+  cursor: pointer;
+  display: flex;
+  overflow: hidden;
+
+}
+
+.contentContainer {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+.contentContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.contentContainer::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 6px;
+}
+
+.contentContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.contentContainer::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+
+.rightBar {
+  width: 20px;
+  height: 100vh;
+  background-color: #e6e6e6;
+  cursor: col-resize;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+  box-shadow:
+    -1px 0 0 rgba(60, 60, 60, 0.2),
+    -4px 0 10px rgba(0, 0, 0, 0.15);
+}
+
+
+.rightBar::before {
+  content: "";
+  width: 4px;
+  height: 36px;
+  background: repeating-linear-gradient(to bottom,
+      #7a7a7a,
+      #7a7a7a 4px,
+      transparent 4px,
+      transparent 8px);
+  border-radius: 2px;
+  opacity: 0.9;
+}
+
+
+
+.rightBar:hover {
+  background-color: #c2c2c2;
+}

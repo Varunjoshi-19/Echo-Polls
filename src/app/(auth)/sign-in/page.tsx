@@ -3,12 +3,17 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginFormData } from "@/schema/loginSchema";
+import { loginSchema, type LoginFormData } from "@/schema/auth";
 import { useRouter } from "next/navigation";
+import { config } from "@/config";
+import toast from "react-hot-toast";
+import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Page() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
+  const { login } = useAuth();
 
   const {
     register,
@@ -22,7 +27,7 @@ export default function Page() {
     setServerError(null);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(`${config.baseUrl}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -31,14 +36,16 @@ export default function Page() {
 
       const result = await res.json();
 
-      if (!res.ok) {
-        setServerError(result.message || "Invalid email or password");
-        return;
-      }
+      if (res.ok) {
+        toast.success("Logged In Successful !");
+        router.push("/");
+        login(result.user);
 
-      router.push("/");
+      } else {
+        toast.error(result.error || "Failed to login! Please try again");
+      }
     } catch {
-      setServerError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -88,44 +95,31 @@ export default function Page() {
           )}
         </div>
 
+        <div className="text-right mb-4">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
+
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-black text-white py-2 rounded hover:opacity-90"
+          className="w-full bg-blue-600 text-white py-2 pointer
+          rounded hover:bg-blue-700 transition disabled:opacity-60"
         >
           {isSubmitting ? "Logging in..." : "Login"}
         </button>
 
-        <div className="flex items-center my-5">
-          <div className="flex-1 h-px bg-gray-300" />
-          <span className="px-3 text-sm text-gray-500">OR</span>
-          <div className="flex-1 h-px bg-gray-300" />
-        </div>
 
-        <button
-          type="button"
-          className="w-full flex items-center justify-center gap-2 border py-2 rounded hover:bg-gray-50"
-        >
-          <svg width="18" height="18" viewBox="0 0 48 48">
-            <path
-              fill="#EA4335"
-              d="M24 9.5c3.54 0 6.2 1.53 7.62 2.8l5.18-5.18C33.64 4.15 29.23 2 24 2 14.82 2 7.02 7.38 3.69 15.2l6.99 5.42C12.3 14.3 17.67 9.5 24 9.5z"
-            />
-            <path
-              fill="#4285F4"
-              d="M46.1 24.5c0-1.7-.15-2.96-.47-4.27H24v8.1h12.7c-.26 2.03-1.7 5.1-4.9 7.15l7.52 5.83c4.38-4.05 6.78-10 6.78-16.8z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M10.68 28.62a14.9 14.9 0 010-9.24l-6.99-5.42a23.9 23.9 0 000 20.08l6.99-5.42z"
-            />
-            <path
-              fill="#34A853"
-              d="M24 46c6.48 0 11.9-2.13 15.87-5.8l-7.52-5.83c-2.02 1.4-4.73 2.38-8.35 2.38-6.33 0-11.7-4.8-13.32-11.12l-6.99 5.42C7.02 40.62 14.82 46 24 46z"
-            />
-          </svg>
-          <span>Login with Google</span>
-        </button>
+        <p className="text-center text-sm mt-4">
+          Don't have an account?{" "}
+          <Link href="/sign-up" className="text-blue-600 hover:underline">
+            Sign Up
+          </Link>
+        </p>
       </form>
     </div>
   );
