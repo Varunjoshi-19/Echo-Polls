@@ -16,7 +16,7 @@ EchoPolls is a modern, interactive polling system app that allows users to creat
 - **Database:** MongoDB
 - **Authentication:** JWT (JSON Web Tokens)
 - **State Management:** React Context
-- **Real-time:** Socket.IO (optional, if implementing live updates)
+- **Real-time:** Socket.IO 
 
 ## Installation
 
